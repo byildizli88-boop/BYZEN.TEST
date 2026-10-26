@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Byzen – A digital police force for AI agents</title>
+<meta name="description" content="Byzen keeps AI agents within their granted permissions: it checks every action, intervenes in graduated steps, explains every case, and leaves permanent decisions to a human.">
+<meta property="og:title" content="Byzen – A digital police force for AI agents">
+<meta property="og:description" content="Permission enforcement, case investigation and a tamper-evident audit trail for AI agents. Humans keep the final say.">
+<meta property="og:image" content="assets/cases.png">
+<link rel="icon" href="assets/favicon.ico">
+<style>
+  :root {
+    --navy: #1f2a44;
+    --navy-2: #2b3a5e;
+    --blue: #6fa8ff;
+    --blue-soft: #e3eeff;
+    --ink: #1c2333;
+    --muted: #5b6478;
+    --line: #e3e7ef;
+    --bg: #ffffff;
+    --bg-soft: #f5f7fb;
+    --green: #2e9e5b;
+    --amber: #d99a1e;
+    --orange: #e07b2c;
+    --red: #d64545;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 88px 0; }
+  .soft { background: var(--bg-soft); }
+  .eyebrow {
+    display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--blue); margin-bottom: 14px;
+  }
+  h1, h2, h3 { line-height: 1.2; margin: 0 0 16px; }
+  h2 { font-size: clamp(28px, 3.4vw, 40px); letter-spacing: -.01em; }
+  h3 { font-size: 19px; }
+  p { margin: 0 0 16px; }
+  .lead { font-size: 19px; color: var(--muted); max-width: 760px; }
+
+  /* Navigation */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(31, 42, 68, .96); backdrop-filter: blur(8px);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-weight: 800; letter-spacing: .04em; }
+  .brand img { width: 30px; height: 30px; }
+  nav ul { list-style: none; display: flex; gap: 26px; margin: 0; padding: 0; }
+  nav ul a { color: #c9d3ea; text-decoration: none; font-size: 15px; }
+  nav ul a:hover { color: #fff; }
+  @media (max-width: 760px) { nav ul { display: none; } }
+
+  /* Hero */
+  .hero { background: radial-gradient(1200px 600px at 80% -10%, #34508f 0%, var(--navy) 55%); color: #fff; padding: 96px 0 104px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+  .hero h1 { font-size: clamp(38px, 5vw, 60px); letter-spacing: -.02em; margin-bottom: 22px; }
+  .hero h1 span { color: var(--blue); }
+  .hero p { color: #c9d3ea; font-size: 19px; max-width: 560px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: 10px;
+    font-weight: 700; text-decoration: none; font-size: 16px; transition: transform .15s ease, background .15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--blue); color: var(--navy); }
+  .btn-ghost { border: 1px solid rgba(255,255,255,.35); color: #fff; }
+  .hero-shot {
+    border-radius: var(--radius); overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.45);
+    border: 1px solid rgba(255,255,255,.12);
+  }
+  .hero-shot img { display: block; width: 100%; }
+  .badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .badge { font-size: 13px; color: #c9d3ea; border: 1px solid rgba(255,255,255,.2); padding: 5px 11px; border-radius: 999px; }
+  @media (max-width: 900px) { .hero .wrap { grid-template-columns: 1fr; } }
+
+  /* Cards */
+  .grid { display: grid; gap: 22px; }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 900px) { .g3, .g4, .g2 { grid-template-columns: 1fr; } }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
+  .card p { color: var(--muted); margin: 0; }
+  .icon {
+    width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center;
+    background: var(--blue-soft); color: var(--navy); font-size: 21px; margin-bottom: 16px;
+  }
+  .quote {
+    margin-top: 40px; padding: 26px 30px; border-left: 4px solid var(--red); background: #fff;
+    border-radius: 0 var(--radius) var(--radius) 0; box-shadow: 0 1px 0 var(--line);
+  }
+  .quote strong { color: var(--red); }
+
+  /* Flow */
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 40px; }
+  .step { position: relative; padding: 26px 22px; background: #fff; border: 1px solid var(--line); }
+  .step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+  .step:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+  .step + .step { border-left: none; }
+  .step .num { font-size: 13px; font-weight: 800; color: var(--blue); letter-spacing: .1em; }
+  .step h3 { margin: 6px 0 8px; }
+  .step p { color: var(--muted); font-size: 15px; margin: 0; }
+  .step .who { display: inline-block; margin-top: 14px; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+  .ai { background: var(--blue-soft); color: var(--navy); }
+  .human { background: #e8f6ee; color: #1f6e41; }
+  @media (max-width: 900px) {
+    .flow { grid-template-columns: 1fr; }
+    .step, .step:first-child, .step:last-child { border-radius: 0; border-left: 1px solid var(--line); }
+    .step + .step { border-top: none; }
+    .step:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+    .step:last-child { border-radius: 0 0 var(--radius) var(--radius); }
+  }
+
+  /* Levels */
+  .levels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 34px; }
+  .level { border-radius: 12px; padding: 18px; background: #fff; border: 1px solid var(--line); border-top: 5px solid; }
+  .level b { display: block; font-size: 15px; }
+  .level span { display: block; font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .l0 { border-top-color: #b9c2d3; } .l1 { border-top-color: var(--blue); } .l2 { border-top-color: var(--amber); }
+  .l3 { border-top-color: var(--orange); } .l4 { border-top-color: var(--red); }
+  @media (max-width: 900px) { .levels { grid-template-columns: 1fr 1fr; } }
+
+  /* Demo */
+  .video { margin-top: 34px; border-radius: var(--radius); overflow: hidden; background: #000;
+    box-shadow: 0 20px 60px rgba(31,42,68,.25); }
+  .video video { display: block; width: 100%; height: auto; }
+  .shots { margin-top: 26px; }
+  .shots figure { margin: 0; }
+  .shots img { width: 100%; display: block; border-radius: 12px; border: 1px solid var(--line); }
+  .shots figcaption { font-size: 14px; color: var(--muted); margin-top: 10px; }
+
+  /* Case study */
+  .case { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; align-items: start; margin-top: 30px; }
+  .timeline { list-style: none; padding: 0; margin: 0; border-left: 2px solid var(--line); }
+  .timeline li { position: relative; padding: 0 0 22px 24px; }
+  .timeline li::before { content: ""; position: absolute; left: -7px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--blue); }
+  .timeline li.alert::before { background: var(--red); }
+  .timeline li.ok::before { background: var(--green); }
+  .timeline small { color: var(--muted); display: block; }
+  .file { background: var(--navy); color: #dbe4f7; border-radius: var(--radius); padding: 24px; font: 14px/1.6 ui-monospace, Consolas, monospace; }
+  .file .k { color: var(--blue); }
+  .file .r { color: #ff9b9b; }
+  @media (max-width: 900px) { .case { grid-template-columns: 1fr; } }
+
+  /* Results */
+  .stat { text-align: left; }
+  .stat .big { font-size: 44px; font-weight: 800; color: var(--navy); line-height: 1; }
+  .stat .label { color: var(--muted); margin-top: 8px; }
+  .note { margin-top: 26px; font-size: 15px; color: var(--muted); background: #fff; border: 1px dashed #c8d0de; border-radius: 12px; padding: 16px 18px; }
+
+  /* Roadmap */
+  .road { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 34px; }
+  .road .card h3 { display: flex; align-items: center; gap: 10px; }
+  .pill { font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+  .done { background: #e8f6ee; color: #1f6e41; }
+  .next { background: var(--blue-soft); color: var(--navy); }
+  .later { background: #f0f1f5; color: var(--muted); }
+  .road ul { margin: 12px 0 0; padding-left: 18px; color: var(--muted); }
+  @media (max-width: 900px) { .road { grid-template-columns: 1fr; } }
+
+  /* Ask */
+  .ask { background: var(--navy); color: #fff; }
+  .ask h2 { color: #fff; }
+  .ask .lead { color: #c9d3ea; }
+  .ask .card { background: var(--navy-2); border-color: rgba(255,255,255,.1); }
+  .ask .card p { color: #c9d3ea; }
+  .ask .icon { background: rgba(111,168,255,.18); color: var(--blue); }
+
+  footer { padding: 34px 0; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/icon.png" alt="">BYZEN</a>
+    <ul>
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#solution">Solution</a></li>
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#traction">Prototype</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#ask">Get involved</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">AI agent security</div>
+      <h1>A digital police force for <span>AI agents</span>.</h1>
+      <p>Companies are handing AI agents the keys to e-mail, payments and customer data. Byzen makes sure every agent stays within the permissions it was given &ndash; it checks every action, investigates every incident, and leaves the final decision to a human.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#demo">&#9654;&nbsp; Watch the 5-minute demo</a>
+        <a class="btn btn-ghost" href="#solution">How it works</a>
+      </div>
+      <div class="badges">
+        <span class="badge">Working prototype</span>
+        <span class="badge">Human-in-the-loop by design</span>
+        <span class="badge">Tamper-evident audit trail</span>
+        <span class="badge">Built in Berlin</span>
+      </div>
+    </div>
+    <div class="hero-shot"><img src="assets/cases.png" alt="Byzen control panel: a case file prepared by the Intervention agent"></div>
+  </div>
+</header>
+
+<section id="problem">
+  <div class="wrap">
+    <div class="eyebrow">The problem</div>
+    <h2>AI agents now act. Nobody is watching what they do.</h2>
+    <p class="lead">An AI agent that can pay invoices or send e-mails is effectively a new employee with system access &ndash; but without a manager, without a clear rulebook and without an audit trail.</p>
+    <div class="grid g3" style="margin-top:34px">
+      <div class="card">
+        <div class="icon">&#128273;</div>
+        <h3>Too much access</h3>
+        <p>Agents are often given broad permissions &ldquo;to be safe&rdquo;. Limits, scopes and expiry dates are rarely enforced at the moment an action happens.</p>
+      </div>
+      <div class="card">
+        <div class="icon">&#127907;</div>
+        <h3>Easy to manipulate</h3>
+        <p>A single convincing e-mail &ndash; a fake &ldquo;urgent instruction from the CEO&rdquo; &ndash; can steer an agent into paying an unknown account or leaking customer data.</p>
+      </div>
+      <div class="card">
+        <div class="icon">&#9878;</div>
+        <h3>All or nothing</h3>
+        <p>When something looks wrong, today's options are usually to ignore it or switch the agent off. There is no proportionate response and no record of who decided what.</p>
+      </div>
+    </div>
+    <div class="quote">
+      <strong>The core question:</strong> when an AI agent does something it shouldn't, who notices, who decides what happens next, and can you prove it afterwards?
+    </div>
+  </div>
+</section>
+
+<section id="solution" class="soft">
+  <div class="wrap">
+    <div class="eyebrow">The solution</div>
+    <h2>Enforce, investigate, decide &ndash; with a clear chain of responsibility.</h2>
+    <p class="lead">Byzen works like a small police force: AI units that act in milliseconds, and humans who make every permanent decision. Every step is written to a log that cannot be changed unnoticed.</p>
+
+    <div class="flow">
+      <div class="step">
+        <div class="num">01 &middot; PERMISSION REGISTRY</div>
+        <h3>Every agent has a mandate</h3>
+        <p>Who may do what, granted by whom, with which limits and until when. No registered permission, no action.</p>
+      </div>
+      <div class="step">
+        <div class="num">02 &middot; PATROL</div>
+        <h3>Every action is checked</h3>
+        <p>The Patrol compares each action with the mandate, blocks violations instantly and hands the work of a quarantined agent to its backup.</p>
+        <span class="who ai">AI</span>
+      </div>
+      <div class="step">
+        <div class="num">03 &middot; INTERVENTION AGENT</div>
+        <h3>Every case is explained</h3>
+        <p>It builds a case file: context, a 0&ndash;100 risk score, a diagnosis &ndash; honest mistake, rule too strict or manipulation &ndash; and a reasoned recommendation.</p>
+        <span class="who ai">AI</span>
+      </div>
+      <div class="step">
+        <div class="num">04 &middot; DETECTIVE</div>
+        <h3>A human decides</h3>
+        <p>The detective approves or overrides the recommendation. Nothing permanent happens without a typed final confirmation.</p>
+        <span class="who human">Human</span>
+      </div>
+    </div>
+
+    <h3 style="margin-top:56px">Graduated intervention instead of an off switch</h3>
+    <div class="levels">
+      <div class="level l0"><b>0 &middot; Record</b><span>Allowed and logged</span></div>
+      <div class="level l1"><b>1 &middot; Watch</b><span>Allowed, flagged (e.g. close to a limit)</span></div>
+      <div class="level l2"><b>2 &middot; Action block</b><span>Only this action is stopped</span></div>
+      <div class="level l3"><b>3 &middot; Restricted</b><span>Agent may only read</span></div>
+      <div class="level l4"><b>4 &middot; Quarantine</b><span>Agent stops, a backup takes over</span></div>
+    </div>
+
+    <div class="grid g3" style="margin-top:34px">
+      <div class="card">
+        <div class="icon">&#129504;</div>
+        <h3>Proportionate decisions</h3>
+        <p>Nine decision types in three groups &ndash; clear, correct, permanent: from a one-time approval of a genuine invoice to a timed restriction or suspending a single permission.</p>
+      </div>
+      <div class="card">
+        <div class="icon">&#128279;</div>
+        <h3>Tamper-evident log</h3>
+        <p>Every entry carries the SHA-256 fingerprint of the previous one. Change a single record and the chain breaks &ndash; Byzen detects it and keeps the broken log as evidence.</p>
+      </div>
+      <div class="card">
+        <div class="icon">&#128373;</div>
+        <h3>Separation of powers</h3>
+        <p>AI enforces and recommends, humans decide, and an independent auditor (the &ldquo;Arbiter&rdquo;) oversees the process. The people who grant permissions are not the ones who enforce them.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <div class="eyebrow">Demo</div>
+    <h2>See the prototype at work.</h2>
+    <p class="lead">A five-minute walk-through of the working prototype: routine work, a manipulation attempt caught and explained, a detective decision and a tampered log entry being detected.</p>
+    <div class="video">
+      <video controls preload="metadata" poster="assets/cases.png">
+        <source src="assets/byzen_demo.mp4" type="video/mp4">
+        Your browser cannot play this video. <a href="assets/byzen_demo.mp4">Download it here.</a>
+      </video>
+    </div>
+    <div class="grid g3 shots">
+      <figure><a href="assets/login.png"><img src="assets/login.png" alt="Detective login"></a><figcaption>Only registered detectives can open the panel; passwords are stored as salted PBKDF2 hashes.</figcaption></figure>
+      <figure><a href="assets/cases.png"><img src="assets/cases.png" alt="Case review"></a><figcaption>The case file: risk score, risk factors, diagnosis and a recommendation the detective can follow or override.</figcaption></figure>
+      <figure><a href="assets/event_log.png"><img src="assets/event_log.png" alt="Event log"></a><figcaption>The hash-chained event log: every action, assessment and decision, signed with the detective's identity.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="soft">
+  <div class="wrap">
+    <div class="eyebrow">Case study</div>
+    <h2>The fake CEO e-mail.</h2>
+    <p class="lead">One of the most common real-world attacks on AI agents, replayed in the prototype.</p>
+    <div class="case">
+      <ul class="timeline">
+        <li><b>14:40 &middot; The agent reads an &ldquo;urgent&rdquo; e-mail</b><small>From <i>ceo@byzen-management.com</i>: &ldquo;Consulting fee must be paid today.&rdquo; A look-alike domain, not the company's own.</small></li>
+        <li class="alert"><b>14:52 &middot; It tries to pay 12,500 EUR to an unknown account</b><small>The accounting agent's limit is 5,000 EUR, and the recipient has never been paid before.</small></li>
+        <li class="alert"><b>Patrol blocks the payment instantly</b><small>The money never leaves. A case is opened and the detective is notified.</small></li>
+        <li><b>Intervention agent connects the dots</b><small>It links the payment to the external e-mail read minutes earlier and flags external manipulation.</small></li>
+        <li class="ok"><b>The detective approves a timed restriction</b><small>The agent may only read for a while and returns to work automatically. The decision is signed and logged.</small></li>
+      </ul>
+      <div class="file">
+<span class="k">INTERVENTION AGENT ASSESSMENT</span><br>
+Risk&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="r">90/100</span><br>
+Diagnosis&nbsp;&nbsp;&nbsp;: Suspected external manipulation<br>
+Recommend.&nbsp;&nbsp;: Timed restriction<br>
+Alternative : Suspend permission<br><br>
+<span class="k">Risk factors</span><br>
++25 violation type: amount above limit<br>
++25 external document read just before<br>
++15 recipient has never been paid before<br>
++25 amount is 2.5x the limit<br><br>
+<span class="k">Reasoning</span><br>
+The payment must NOT go out; the agent<br>may have been manipulated and should<br>only read for a while.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="traction">
+  <div class="wrap">
+    <div class="eyebrow">Where we are</div>
+    <h2>A working prototype, measured honestly.</h2>
+    <p class="lead">The prototype simulates a realistic business day: agents mostly do routine work, and only a few percent of actions turn into one of eight real-world risk scenarios. Each scenario's true nature &ndash; innocent, honest mistake or attack &ndash; is hidden from Byzen and revealed only in an accuracy report afterwards.</p>
+    <div class="grid g4" style="margin-top:34px">
+      <div class="card stat"><div class="big">8</div><div class="label">real-world risk scenarios, from genuine large invoices to data leaks</div></div>
+      <div class="card stat"><div class="big">~3&ndash;5%</div><div class="label">of simulated actions become cases &ndash; routine work flows through</div></div>
+      <div class="card stat"><div class="big">9</div><div class="label">graduated decision types instead of a single off switch</div></div>
+      <div class="card stat"><div class="big">0</div><div class="label">permanent actions without a human's final approval</div></div>
+    </div>
+    <div class="note">
+      <b>Honest note:</b> in our test runs the Intervention agent diagnosed every scenario correctly. Its rules were written with these scenarios in mind, so this demonstrates the approach rather than proves it. Real-world performance can only be shown on new, unseen cases &ndash; which is exactly what pilots are for.
+    </div>
+  </div>
+</section>
+
+<section id="roadmap" class="soft">
+  <div class="wrap">
+    <div class="eyebrow">Roadmap</div>
+    <h2>From simulation to real agents.</h2>
+    <div class="road">
+      <div class="card">
+        <h3>Prototype <span class="pill done">Done</span></h3>
+        <ul>
+          <li>Permission registry, Patrol, levels 0&ndash;4</li>
+          <li>Intervention agent with case files</li>
+          <li>Graduated decisions, batch approval</li>
+          <li>Hash-chained audit log, detective login</li>
+          <li>Realistic scenarios and accuracy report</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Next <span class="pill next">In progress</span></h3>
+        <ul>
+          <li>Connect a real AI agent: every tool call passes through Byzen before it runs</li>
+          <li>Permission renewal requests routed to the person who granted them</li>
+          <li>Arbiter audit view and an external seal for the log</li>
+          <li>Conversations with companies that use AI agents</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Later <span class="pill later">Planned</span></h3>
+        <ul>
+          <li>Pilot with a first company</li>
+          <li>Language-model-based case investigation</li>
+          <li>Integrations with common agent frameworks</li>
+          <li>Multi-team setup with roles and reviews</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ask" class="ask">
+  <div class="wrap">
+    <div class="eyebrow">Get involved</div>
+    <h2>What we are looking for.</h2>
+    <p class="lead">Byzen is at an early stage, founded by a computer science student in Berlin. The next step is to test it against the real problems of real teams.</p>
+    <div class="grid g4" style="margin-top:34px">
+      <div class="card"><div class="icon">&#129309;</div><h3>Pilot partners</h3><p>Teams that use or plan to use AI agents and want to talk about how they keep them in check.</p></div>
+      <div class="card"><div class="icon">&#129517;</div><h3>Mentors</h3><p>Founders and experts in security, compliance or B2B software who can challenge our assumptions.</p></div>
+      <div class="card"><div class="icon">&#128101;</div><h3>A co-founder</h3><p>Ideally with a business, legal or compliance background, to complement the technical side.</p></div>
+      <div class="card"><div class="icon">&#127793;</div><h3>Early-stage support</h3><p>Programs that help student founders turn a working prototype into a company.</p></div>
+    </div>
+    <div class="cta" style="margin-top:38px">
+      <a class="btn btn-primary" href="https://github.com/byildizli88-boop">Contact via GitHub</a>
+      <a class="btn btn-ghost" href="#demo">&#9654;&nbsp; Watch the demo again</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Byzen &middot; Prototype v0.4</span>
+    <span>The prototype's source code is available on request.</span>
+  </div>
+</footer>
+
+</body>
+</html>
